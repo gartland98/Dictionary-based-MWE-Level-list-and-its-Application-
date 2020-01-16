@@ -268,12 +268,6 @@ print('cambridge list:',len(cambridge_list))
 #phrase_vocab=list(set(cambridge_list))
 phrase=[i for i in cambridge_list if len(i.split())>1]
 
-#phrase_vocab.append('what is going on')
-#wordnet_phrases=[phrase_clean_text(i) for i in wordnet_word]
-#wordnet_phrase=[i for i in wordnet_phrases if re.search(r'_',i)!=None]
-#wordnet_phrase=[i.replace('_',' ').strip() for i in wordnet_phrase]
-#print(wordnet_phrase[0])
-#phrase=list(set(phrase_vocab+wordnet_phrase))
 print('total phrase: ', len(phrase))
 
 
@@ -302,16 +296,10 @@ def clean_text(text):
     '''Clean text by removing unnecessary characters and altering the format of words.'''
 
     text = re.sub(r"'m", "am", text)
-    #text = re.sub(r"'s", "is", text)
-    #text = re.sub(r"\'ll", "will", text)
     text = re.sub(r"\'ve", "have", text)
     text = re.sub(r"\'re", "are", text)
-    #text = re.sub(r"n't", "not", text)
-    #text = re.sub(r"n'", "ng", text)
     text = re.sub(r"'bout", "about", text)
     text = re.sub(r"'till", "until", text)
-    #text = re.sub("wo", "will", text)
-    #text = re.sub("ca", "can", text)
     text = re.sub('du n no', "do n't know", text)
     text = re.sub('gon na', 'going to', text)
     text = re.sub('cos', 'because', text)
@@ -327,21 +315,6 @@ for i in sentences:
         clean_sentence.append(clean_text(j))
     clean_sentences.append(clean_sentence)
 
-
-
-#def clean_text2(cleaned):
-    #exception=['wo','ca']
-    #if cleaned in exception:
-        #cleaned = re.sub("wo","will",cleaned)
-        #cleaned = re.sub("ca","can",cleaned)
-    #return cleaned
-
-#cleaned_sentences=[]
-#for i in clean_sentences:
-    #cleaned_sentence=[]
-    #for j in i:
-        #cleaned_sentence.append(clean_text2(j))
-    #cleaned_sentences.append(cleaned_sentence)
 
 nltk.download('wordnet')
 from nltk.corpus import wordnet as wn
@@ -585,8 +558,6 @@ def correction2(texted):
         texted = re.sub("wa","be",texted)
         texted = re.sub("are","be",texted)
         texted = re.sub("ha","have",texted)
-        #texted = re.sub("cos","because",texted)
-        #texted = re.sub ("taking","take",texted)
     return texted
 
 lemmatized_sentences=[]
@@ -670,35 +641,25 @@ for index1, sentence in enumerate(correct_lemmas):
 
     result.append(' '.join(new_sentence))
 
-#resulted=[]
-#for i in result:
-    #resulted.append(i.lower())
-
 
 os.chdir('C:/Users/gartl/Documents')
 output_file = open("chatbot_training_data_revision.txt", 'w',encoding='utf-8')
 for sentences in result:
-    #print(word, end=' ', file=output_file)
     output_file.write(sentences+'\n')
-  #print(file=output_file)
 output_file.close()
 
 phrases_data=[i for j in result for i in j.split() if re.search(r'_',i)!=None]
 print('phrases_data:',len(phrases_data))
 phrases_file=open("spokenBNC_MWElist.txt", 'w',encoding='utf-8')
 for phrases in phrases_data:
-    #print(word, end=' ', file=output_file)
     phrases_file.write(phrases+'\n')
-  #print(file=output_file
 phrases_file.close()
 
 phrase_data=[i for j in lemma_sentences for i in j if re.search(r'_',i)!=None]
 print('phrase_data:',len(phrase_data))
 phrase_file=open("spokenBNC_MWE_lemmalist.txt", 'w',encoding='utf-8')
 for phrases in phrase_data:
-    #print(word, end=' ', file=output_file)
     phrase_file.write(phrases+'\n')
-  #print(file=output_file
 phrase_file.close()
 
 
