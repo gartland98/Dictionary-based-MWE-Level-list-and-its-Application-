@@ -1,5 +1,5 @@
-exception=['going', 'something',
- 'thing',
+''' since present continuous tense can't be processed by wn.morphy that lemmatize words automatically, i made a exception list that contain present continuous tense of common words to do it manually '''
+exception=['going', 
  'anything',
  'being',
  'nothing',
@@ -24,17 +24,14 @@ exception=['going', 'something',
  'fucking',
  'living',
  'waiting',
- 'king',
  'using',
  'playing',
  'leaving',
  'asking',
  'giving',
  'seeing',
- 'ring',
  'calling',
  'following',
- 'evening',
  'happening',
  'watching',
  'wedding',
@@ -109,13 +106,11 @@ exception=['going', 'something',
  'cutting',
  'pulling',
  'offering',
- 'swing',
  'boring',
  'burning',
  'passing',
  'housing',
  'parking',
- 'wing',
  'breathing',
  'recording',
  'cleaning',
@@ -228,7 +223,6 @@ exception=['going', 'something',
  'lightning',
  'freezing',
  'caring',
- 'sting',
  'finishing',
  'pressing',
  'gambling',
@@ -252,33 +246,22 @@ import re
 
 
 
-#wordnet_words=open('wordnet_list.txt', encoding='utf-8').readlines()
-#wordnet_words=[i.replace('\ufeff','') for i in wordnet_words]
-#wordnet_word=[re.search('.+(?=%)',i).group() for i in wordnet_words]
 
-#os.chdir('C:/Users/gartl/PycharmProjects/bnc_phrase_list')
-cambridge_list=open('phrases_list.txt',encoding='utf-8').readlines()
-cambridge_list=[i.strip() for i in cambridge_list]
+'''open lemmatized version of cambridge phrase list'''
+cambridge_list=open('lemma_phrase_list.txt',encoding='utf-8').readlines()
+phrase=[i.strip() for i in cambridge_list]
 
-#cambridge_list.append('get rid of')
-print('cambridge list:',len(cambridge_list))
-
-
-
-#phrase_vocab=list(set(cambridge_list))
-phrase=[i for i in cambridge_list if len(i.split())>1]
-
-print('total phrase: ', len(phrase))
-
+print('cambridge list total phrase:',len(phrase))
 
 os.chdir('C:/')
-
+''' get the address of every file'''
 spoken_data_path=[]
 spoken_data=os.listdir('./spoken_bnc')
 for i in spoken_data:
     spoken_data_path.append(os.path.join(os.getcwd(),'spoken_bnc',i))
 print(len(spoken_data_path))
 
+''' get the text from corpus, since spoken bnc corpus compiled in xml format, i used xml reader code. ('u'==utterance, 'w'==word) '''
 sentences = []
 for i in spoken_data_path:
     root = elemTree.parse(i).getroot()
@@ -296,14 +279,20 @@ def clean_text(text):
     '''Clean text by removing unnecessary characters and altering the format of words.'''
 
     text = re.sub(r"'m", "am", text)
-    text = re.sub(r"\'ve", "have", text)
+    #text = re.sub(r"'s", "is", text)
+    #text = re.sub(r"\'ll", "will", text)
+    #text = re.sub(r"\'ve", "have", text)
     text = re.sub(r"\'re", "are", text)
+    #text = re.sub(r"n't", "not", text)
+    #text = re.sub(r"n'", "ng", text)
     text = re.sub(r"'bout", "about", text)
     text = re.sub(r"'till", "until", text)
+    #text = re.sub("wo", "will", text)
+    #text = re.sub("ca", "can", text)
     text = re.sub('du n no', "do n't know", text)
     text = re.sub('gon na', 'going to', text)
     text = re.sub('cos', 'because', text)
-    text = re.sub(r"[()\#/@;:<>{}`+=~|]", "", text)
+    text = re.sub(r"[()\#/_@;:<>{}`+=~|]", "", text)
 
     return text
 
@@ -315,7 +304,7 @@ for i in sentences:
         clean_sentence.append(clean_text(j))
     clean_sentences.append(clean_sentence)
 
-
+''' lemmatize the word'''
 nltk.download('wordnet')
 from nltk.corpus import wordnet as wn
 lemmatize_sentences=[]
@@ -325,12 +314,14 @@ for i in clean_sentences:
         lemmatize_sentence.append(wn.morphy(j))
     lemmatize_sentences.append(lemmatize_sentence)
 
+''' wn.morphy return none to certain part of speech such as preposition, therefore replace Nonetype outputs to unlemmatized equivalent'''
 for i,y in zip(lemmatize_sentences,clean_sentences):
     for j,x in enumerate(i):
         if x==None:
             i[j]=y[j]
 
 def correction(text):
+    '''lemmatize words with present continuous tense form'''
     if text in exception:
         text=re.sub('going','go',text)
         text=re.sub('getting','get',text)
@@ -552,12 +543,15 @@ def correction(text):
 
     return text
 def correction2(texted):
-    error=["wa","are","ha","am"]
+    ''' change wrong lemmatized words into correct one'''
+    error=["wa","are","ha","am","comic_strip"]
     if texted in error:
-        texted=re.sub("am","be",texted)
+        texted = re.sub("am","be",texted)
         texted = re.sub("wa","be",texted)
         texted = re.sub("are","be",texted)
         texted = re.sub("ha","have",texted)
+        ''' couldn't figure out the reason but during the lemmatization process comic strip becomes comic_strip so this code correct this error'''
+        texted = re.sub("comic_strip", 'comic strip',texted)
     return texted
 
 lemmatized_sentences=[]
@@ -576,10 +570,21 @@ for i in lemmatized_sentences:
         lemma_sentence.append(correction2(j))
     lemma_sentences.append(lemma_sentence)
 
-print('lemma sentence')
+print([j for i in lemma_sentences for j in i if j=='comic_strip'])
+print(len([j for i in lemma_sentences for j in i if re.search('_',j)!=None]))
+print([j for i in lemma_sentences for j in i if re.search('_',j)!=None])
 
+'''find and bound phrases in whole corpus'''
+print('lemma sentence')
 for i in range(len(lemma_sentences)):
-    for j in range(len(lemma_sentences[i])-4):
+    for j in range(len(lemma_sentences[i])-5):
+        if lemma_sentences[i][j]+' '+lemma_sentences[i][j+1]+' '+lemma_sentences[i][j+2]+' '+lemma_sentences[i][j+3]+' '+lemma_sentences[i][j+4]+' '+lemma_sentences[i][j+5] in phrase:
+            lemma_sentences[i][j]=lemma_sentences[i][j]+'_'+lemma_sentences[i][j+1]+'_'+lemma_sentences[i][j+2]+'_'+lemma_sentences[i][j+3]+'_'+lemma_sentences[i][j+4]+'_'+lemma_sentences[i][j+5]
+            lemma_sentences[i][j+1] = ''
+            lemma_sentences[i][j+2] = ''
+            lemma_sentences[i][j+3] = ''
+            lemma_sentences[i][j+4] = ''
+            lemma_sentences[i][j+5] = ''
         if lemma_sentences[i][j]+' '+lemma_sentences[i][j+1]+' '+lemma_sentences[i][j+2]+' '+lemma_sentences[i][j+3]+' '+lemma_sentences[i][j+4] in phrase:
             lemma_sentences[i][j]=lemma_sentences[i][j]+'_'+lemma_sentences[i][j+1]+'_'+lemma_sentences[i][j+2]+'_'+lemma_sentences[i][j+3]+'_'+lemma_sentences[i][j+4]
             lemma_sentences[i][j+1] = ''
@@ -596,10 +601,15 @@ for i in range(len(lemma_sentences)):
             lemma_sentences[i][j+1] = ''
             lemma_sentences[i][j+2] = ''
         if lemma_sentences[i][j]+' '+lemma_sentences[i][j+1] in phrase:
-            #print(sentence[i][j].lower() + ' ' + sentence[i][j + 1].lower())
             lemma_sentences[i][j] = lemma_sentences[i][j] + '_' + lemma_sentences[i][j + 1]
             lemma_sentences[i][j+1] = ''
 
+    if len(lemma_sentences[i])>4 and lemma_sentences[i][-5]+' '+lemma_sentences[i][-4]+' '+lemma_sentences[i][-3]+' '+lemma_sentences[i][-2]+' '+lemma_sentences[i][-1] in phrase:
+        lemma_sentences[i][-5] = lemma_sentences[i][-5]+'_'+lemma_sentences[i][-4]+'_'+lemma_sentences[i][-3]+'_'+lemma_sentences[i][-2] + '_' + lemma_sentences[i][-1]
+        lemma_sentences[i][-4] = ''
+        lemma_sentences[i][-3] = ''
+        lemma_sentences[i][-2] = ''
+        lemma_sentences[i][-1] = ''
     if len(lemma_sentences[i])>3 and lemma_sentences[i][-4]+' '+lemma_sentences[i][-3]+' '+lemma_sentences[i][-2]+' '+lemma_sentences[i][-1] in phrase:
         lemma_sentences[i][-4] = lemma_sentences[i][-4]+'_'+lemma_sentences[i][-3]+'_'+lemma_sentences[i][-2] + '_' + lemma_sentences[i][-1]
         lemma_sentences[i][-3] = ''
@@ -610,10 +620,9 @@ for i in range(len(lemma_sentences)):
         lemma_sentences[i][-2] =''
         lemma_sentences[i][-1] = ''
     if len(lemma_sentences[i])>1 and lemma_sentences[i][-2]+' '+lemma_sentences[i][-1] in phrase:
-        #print(sentence[i][-2].lower() + ' ' + sentence[i][-1].lower())
         lemma_sentences[i][-2] = lemma_sentences[i][-2] + '_' + lemma_sentences[i][-1]
         lemma_sentences[i][-1] = ''
-    #sentence에서 ''인 index를 삭제
+    ''' remove every blanks('') in each sentences'''
     while True:
         if '' in lemma_sentences[i]:
             lemma_sentences[i].remove('')
@@ -622,6 +631,7 @@ for i in range(len(lemma_sentences)):
     if i%1000==0:
         print('{}/{}'.format(i,1248110))
 
+''' make a sentence as a string'''
 correct_lemmas = []
 for i in lemma_sentences:
     correct_lemmas.append(' '.join(i))
@@ -629,17 +639,18 @@ correct_cleaned = []
 for j in clean_sentences:
     correct_cleaned.append(' '.join(j))
 
+''' find the location of phrases in lemmatized sentences and bound the words in equivalent position in original corpus'''
 result=[]
 for index1, sentence in enumerate(correct_lemmas):
     words = [i for i in sentence.split(' ')]
     new_sentence = correct_cleaned[index1].split(' ')
     for index2, i in enumerate(words):
         if '_' in i:
-            #print(len(i.split('_')))
             new_sentence[index2]='_'.join(new_sentence[index2:index2+len(i.split('_'))])
             del new_sentence[index2+1:index2+len(i.split('_'))]
 
     result.append(' '.join(new_sentence))
+
 
 
 os.chdir('C:/Users/gartl/Documents')
@@ -652,13 +663,16 @@ phrases_data=[i for j in result for i in j.split() if re.search(r'_',i)!=None]
 print('phrases_data:',len(phrases_data))
 phrases_file=open("spokenBNC_MWElist.txt", 'w',encoding='utf-8')
 for phrases in phrases_data:
+
     phrases_file.write(phrases+'\n')
+
 phrases_file.close()
 
 phrase_data=[i for j in lemma_sentences for i in j if re.search(r'_',i)!=None]
 print('phrase_data:',len(phrase_data))
 phrase_file=open("spokenBNC_MWE_lemmalist.txt", 'w',encoding='utf-8')
 for phrases in phrase_data:
+
     phrase_file.write(phrases+'\n')
 phrase_file.close()
 
