@@ -575,7 +575,7 @@ print([j for i in lemma_sentences for j in i if j=='comic_strip'])
 print(len([j for i in lemma_sentences for j in i if re.search('_',j)!=None]))
 print([j for i in lemma_sentences for j in i if re.search('_',j)!=None])
 
-'''find and bound phrases in whole corpus'''
+'''find and bound phrases in whole corpus. this code bound longer phrases first because the number of longer phrases can be subsumed to the number of short phrases'''
 print('lemma sentence')
 for i in range(len(lemma_sentences)):
     for j in range(len(lemma_sentences[i])-5):
