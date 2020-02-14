@@ -586,7 +586,7 @@ print([i for i in lemma_tv if re.search('_',i)!=None])
 print('lemma_length:',len(lemma_tv))
 print('raw_length:', len(telly))
 
-'''find and bound phrases in whole corpus'''
+'''find and bound phrases in whole corpus. this code bound longer phrases first because the number of longer phrases can be subsumed to the number of short phrases'''
 print('phrase bound start')
 for i in range(len(lemma_tv)-5):
     if lemma_tv[i] + ' ' + lemma_tv[i+1] + ' ' + lemma_tv[i+2] + ' ' + lemma_tv[i+3] + ' ' + lemma_tv[i+4] + ' ' + lemma_tv[i+5] in phrase_six:
