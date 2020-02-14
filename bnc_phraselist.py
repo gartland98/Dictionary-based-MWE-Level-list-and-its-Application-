@@ -248,7 +248,7 @@ nltk.download('wordnet')
 
 os.chdir('C:/Users/gartl/pycharm project/bnc_phrase_list')
 '''open lemmatized version of cambridge phrase list'''
-phrases_list=open('lemma_phrase_list.txt',encoding='utf-8').readlines()
+phrases_list=open('lemma_MWE_list.txt',encoding='utf-8').readlines()
 phrases_list=[i.strip() for i in phrases_list]
 print('cambridge list:',len(phrases_list))
 
