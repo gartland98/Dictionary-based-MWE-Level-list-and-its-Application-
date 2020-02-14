@@ -248,7 +248,7 @@ import re
 
 
 '''open lemmatized version of cambridge phrase list'''
-cambridge_list=open('lemma_phrase_list.txt',encoding='utf-8').readlines()
+cambridge_list=open('lemma_MWE_list.txt',encoding='utf-8').readlines()
 phrase=[i.strip() for i in cambridge_list]
 
 print('cambridge list total phrase:',len(phrase))
