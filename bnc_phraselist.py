@@ -602,7 +602,6 @@ for i in range(len(lemma_sentences)):
             lemma_sentences[i][j+1] = ''
             lemma_sentences[i][j+2] = ''
         if lemma_sentences[i][j]+' '+lemma_sentences[i][j+1] in phrase:
-            #print(sentence[i][j].lower() + ' ' + sentence[i][j + 1].lower())
             lemma_sentences[i][j] = lemma_sentences[i][j] + '_' + lemma_sentences[i][j + 1]
             lemma_sentences[i][j + 1] = ''
     if len(lemma_sentences[i])>4 and lemma_sentences[i][-5]+' '+lemma_sentences[i][-4]+' '+lemma_sentences[i][-3]+' '+lemma_sentences[i][-2]+' '+lemma_sentences[i][-1] in phrase:
