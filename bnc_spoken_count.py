@@ -270,18 +270,19 @@ print('total words:',len([j for i in sentences for j in i]))
 
 def clean_text(text):
     '''Clean text by removing unnecessary characters and altering the format of words.'''
-
+  
     text = re.sub(r"'m", "am", text)
     #text = re.sub(r"'s", "is", text)
-    #text = re.sub(r"\'ll", "will", text)
+    text = re.sub(r"\'ll", "will", text)
     text = re.sub(r"\'ve", "have", text)
     text = re.sub(r"\'re", "are", text)
-    #text = re.sub(r"n't", "not", text)
-    #text = re.sub(r"n'", "ng", text)
+    text = re.sub(r"n't", "not", text)
     text = re.sub(r"'bout", "about", text)
     text = re.sub(r"'till", "until", text)
-    text = re.sub('du n no', "do n't know", text)
+    text = re.sub('du n no', "do not know", text)
     text = re.sub('gon na', 'going to', text)
+    text = re.sub('wo', 'will', text)
+    text = re.sub('ca', 'can', text)
     text = re.sub('cos', 'because', text)
     text = re.sub(r"[()\#/@;:<>{}`+=~|]", "", text)
 
