@@ -653,7 +653,7 @@ for index1, sentence in enumerate(correct_lemmas):
     result.append(' '.join(new_sentence))
 
 os.chdir('C:/Users/gartl/Documents')
-output_file = open("BNC_training_data_revision.txt", 'w',encoding='utf-8')
+output_file = open("BNC_training_data.txt", 'w',encoding='utf-8')
 for sentences in result:
 
     output_file.write(sentences+'\n')
