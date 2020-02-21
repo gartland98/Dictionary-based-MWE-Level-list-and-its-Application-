@@ -670,7 +670,7 @@ phrases_file.close()
 
 phrase_data=[i for j in lemma_sentences for i in j if re.search(r'_',i)!=None]
 print('phrase_data:',len(phrase_data))
-phrase_file=open("spokenBNC_MWE_lemmalist.txt", 'w',encoding='utf-8')
+phrase_file=open("spokenBNC_lemma_MWElist.txt", 'w',encoding='utf-8')
 for phrases in phrase_data:
 
     phrase_file.write(phrases+'\n')
