@@ -327,7 +327,7 @@ phrase_tri=[i for i in phrases_list if len(i.split())==3]
 phrase_bi=[i for i in phrases_list if len(i.split())==2]
 
 phrase_tri.append('get rid of')
-print('phrase:',len(phrase_five),len(phrase_quad), len(phrase_tri), len(phrase_bi))
+print('phrase:',len(phrase_six),len(phrase_five),len(phrase_quad), len(phrase_tri), len(phrase_bi))
 
 nltk.download('wordnet')
 from nltk.corpus import wordnet as wn
