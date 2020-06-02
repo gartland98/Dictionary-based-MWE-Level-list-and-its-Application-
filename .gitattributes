@@ -1,4 +1,1 @@
-words&MWEs.egg filter=lfs diff=lfs merge=lfs -text
-lemma_MWE_list.txt filter=lfs diff=lfs merge=lfs -text
-lemma_MWE_data.txt filter=lfs diff=lfs merge=lfs -text
-*.zip filter=lfs diff=lfs merge=lfs -text
+*.egg filter=lfs diff=lfs merge=lfs -text
